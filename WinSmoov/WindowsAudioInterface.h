@@ -1,5 +1,7 @@
 #pragma once
 
+#include <initguid.h>
+#include <dshow.h>
 #include "Mmdeviceapi.h"
 #include <map>
 #include <string>
@@ -22,6 +24,7 @@ private:
 	IMMDevice* defaultCaptureDevice;
 	IPropertyStore* pPropStore;
 	LPWSTR pwszID;
-	std::map<std::wstring, IMMDevice*> device_map;
+	std::map<std::wstring, IMMDevice*> input_device_map;
+	std::map<std::wstring, IMMDevice*> output_device_map;
 };
 

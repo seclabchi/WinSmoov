@@ -1,8 +1,8 @@
 #include "pch.h"
 
-
 #include "WindowsAudioInterface.h"
 #include "Functiondiscoverykeys_devpkey.h"
+#include "devicetopology.h"
 
 #define EXIT_ON_ERROR(hres)  \
               if (FAILED(hres)) { goto Exit; }
@@ -49,8 +49,9 @@ void WindowsAudioInterface::enumerateDevices() {
 	EXIT_ON_ERROR(hr)
 	hr = pEnumerator->GetDefaultAudioEndpoint(eCapture, eConsole, &defaultCaptureDevice);
 
-	device_map.clear();
-	hr = pEnumerator->EnumAudioEndpoints(eRender, DEVICE_STATE_ACTIVE, &pCollection);
+	input_device_map.clear();
+	output_device_map.clear();
+	hr = pEnumerator->EnumAudioEndpoints(eAll, DEVICE_STATE_ACTIVE, &pCollection);
 
 	EXIT_ON_ERROR(hr)
 
@@ -78,7 +79,39 @@ void WindowsAudioInterface::enumerateDevices() {
 		}
 
 		std::wstring devFriendlyName = propDevFriendlyName.pwszVal;
-		device_map[devFriendlyName] = dev;
+
+		IDeviceTopology* dev_topology = nullptr;
+		uint32_t connector_count = 0;
+		IConnector* dev_connector = nullptr;
+		ConnectorType connector_type = ConnectorType::Unknown_Connector;
+		DataFlow connector_flow = DataFlow::Out;
+
+		hr = dev->Activate(
+			__uuidof(IDeviceTopology),
+			CLSCTX_ALL,
+			NULL,
+			(void**)&dev_topology);
+
+		EXIT_ON_ERROR(hr)
+
+		hr = dev_topology->GetConnectorCount(&connector_count);
+		EXIT_ON_ERROR(hr)
+		hr = dev_topology->GetConnector(0, &dev_connector);
+		EXIT_ON_ERROR(hr)
+		hr = dev_connector->GetType(&connector_type);
+		EXIT_ON_ERROR(hr)
+		hr = dev_connector->GetDataFlow(&connector_flow);
+		EXIT_ON_ERROR(hr)
+
+		if (connector_flow == eRender) {
+			output_device_map[devFriendlyName] = dev;
+		}
+		else if (connector_flow == eCapture) {
+			input_device_map[devFriendlyName] = dev;
+		}
+		else {
+			TRACE("Unknown connector flow %d\n", connector_flow);
+		}
 
 		PropVariantClear(&propDevFriendlyName);
 		SAFE_RELEASE(pPropStore)
@@ -103,7 +136,7 @@ Exit:
 void WindowsAudioInterface::getInputDevices(std::vector<std::wstring>& devList) {
 	devList.clear();
 
-	for (std::map<std::wstring, IMMDevice*>::iterator it = device_map.begin(); it != device_map.end(); it++) {
+	for (std::map<std::wstring, IMMDevice*>::iterator it = input_device_map.begin(); it != input_device_map.end(); it++) {
 		devList.push_back(it->first);
 	}
 }
@@ -111,7 +144,7 @@ void WindowsAudioInterface::getInputDevices(std::vector<std::wstring>& devList) 
 void WindowsAudioInterface::getOutputDevices(std::vector<std::wstring>& devList) {
 	devList.clear();
 
-	for (std::map<std::wstring, IMMDevice*>::iterator it = device_map.begin(); it != device_map.end(); it++) {
+	for (std::map<std::wstring, IMMDevice*>::iterator it = output_device_map.begin(); it != output_device_map.end(); it++) {
 		devList.push_back(it->first);
 	}
 }

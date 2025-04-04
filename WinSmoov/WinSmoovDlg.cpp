@@ -57,6 +57,9 @@ CWinSmoovDlg::CWinSmoovDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_WINSMOOV_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	comboBoxAudioInputs = nullptr;
+	comboBoxAudioOutputs = nullptr;
+	winAudioInterface = nullptr;
 }
 
 void CWinSmoovDlg::DoDataExchange(CDataExchange* pDX)
@@ -116,6 +119,13 @@ BOOL CWinSmoovDlg::OnInitDialog()
 
 	for (uint32_t i = 0; i < input_devices.size(); i++) {
 		comboBoxAudioInputs->AddString(CString(input_devices[i].c_str()));
+	}
+
+	std::vector<std::wstring> output_devices;
+	winAudioInterface->getOutputDevices(output_devices);
+
+	for (uint32_t i = 0; i < output_devices.size(); i++) {
+		comboBoxAudioOutputs->AddString(CString(output_devices[i].c_str()));
 	}
 
 	return TRUE;  // return TRUE  unless you set the focus to a control

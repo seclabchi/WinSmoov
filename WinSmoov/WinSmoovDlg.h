@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <initguid.h>
 #include "WindowsAudioInterface.h"
 
 // CWinSmoovDlg dialog
