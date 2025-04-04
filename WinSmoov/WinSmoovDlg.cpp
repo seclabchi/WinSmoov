@@ -8,6 +8,8 @@
 #include "WinSmoovDlg.h"
 #include "afxdialogex.h"
 
+#include <vector>
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -103,10 +105,18 @@ BOOL CWinSmoovDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
-	// TODO: Add extra initialization here
+	//Add extra initialization here
+	comboBoxAudioInputs = (CComboBox*)GetDlgItem(IDC_COMBO_AUDIO_INPUT_DEVICE);
+	comboBoxAudioOutputs = (CComboBox*)GetDlgItem(IDC_COMBO_AUDIO_OUTPUT_DEVICE);
 
 	winAudioInterface = new WindowsAudioInterface();
 
+	std::vector<std::wstring> input_devices;
+	winAudioInterface->getInputDevices(input_devices);
+
+	for (uint32_t i = 0; i < input_devices.size(); i++) {
+		comboBoxAudioInputs->AddString(CString(input_devices[i].c_str()));
+	}
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }

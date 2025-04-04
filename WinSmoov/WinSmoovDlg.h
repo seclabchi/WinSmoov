@@ -25,6 +25,8 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
+	CComboBox* comboBoxAudioInputs;
+	CComboBox* comboBoxAudioOutputs;
 
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
