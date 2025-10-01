@@ -4,6 +4,10 @@
 
 #include "pch.h"
 #include "framework.h"
+
+#include <iostream>
+#include <Windows.h>
+
 #include "WinSmoov.h"
 #include "WinSmoovDlg.h"
 
@@ -40,6 +44,8 @@ CWinSmoovApp theApp;
 
 BOOL CWinSmoovApp::InitInstance()
 {
+	EnableConsoleOutput();
+
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
 	// visual styles.  Otherwise, any window creation will fail.
@@ -111,3 +117,37 @@ BOOL CWinSmoovApp::InitInstance()
 	return FALSE;
 }
 
+void CWinSmoovApp::EnableConsoleOutput()
+{
+	// Try to attach to the parent process's console if it exists
+	if (AttachConsole(ATTACH_PARENT_PROCESS))
+	{
+		// Successfully attached, redirect stdout and stderr
+		FILE* pCout;
+		freopen_s(&pCout, "CONOUT$", "w", stdout);
+		std::cout.clear();
+		std::wcout.clear();
+
+		FILE* pCerr;
+		freopen_s(&pCerr, "CONOUT$", "w", stderr); // Redirect cerr to the same console
+		std::cerr.clear();
+		std::wcerr.clear();
+	}
+	else
+	{
+		// No parent console, try to allocate a new one
+		if (AllocConsole())
+		{
+			// Successfully allocated a new console, redirect stdout and stderr
+			FILE* pCout;
+			freopen_s(&pCout, "CONOUT$", "w", stdout);
+			std::cout.clear();
+			std::wcout.clear();
+
+			FILE* pCerr;
+			freopen_s(&pCerr, "CONOUT$", "w", stderr);
+			std::cerr.clear();
+			std::wcerr.clear();
+		}
+	}
+}

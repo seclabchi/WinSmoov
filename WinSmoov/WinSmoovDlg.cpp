@@ -8,7 +8,14 @@
 #include "WinSmoovDlg.h"
 #include "afxdialogex.h"
 
+#include <dwmapi.h>
+
+#include <iostream>
+#include <fstream>
+#include <io.h>
+#include <fcntl.h>
 #include <vector>
+
 
 
 #ifdef _DEBUG
@@ -59,7 +66,7 @@ CWinSmoovDlg::CWinSmoovDlg(CWnd* pParent /*=nullptr*/)
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	comboBoxAudioInputs = nullptr;
 	comboBoxAudioOutputs = nullptr;
-	winAudioInterface = nullptr;
+	win_audio_interface = nullptr;
 }
 
 void CWinSmoovDlg::DoDataExchange(CDataExchange* pDX)
@@ -71,6 +78,7 @@ BEGIN_MESSAGE_MAP(CWinSmoovDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDOK, &CWinSmoovDlg::OnBnClickedOk)
 	ON_CBN_SELCHANGE(IDC_COMBO_AUDIO_INPUT_DEVICE, &CWinSmoovDlg::OnCbnSelchangeComboAudioInputDevice)
 	ON_CBN_SELCHANGE(IDC_COMBO_AUDIO_OUTPUT_DEVICE, &CWinSmoovDlg::OnCbnSelchangeComboAudioOutputDevice)
@@ -112,23 +120,35 @@ BOOL CWinSmoovDlg::OnInitDialog()
 	comboBoxAudioInputs = (CComboBox*)GetDlgItem(IDC_COMBO_AUDIO_INPUT_DEVICE);
 	comboBoxAudioOutputs = (CComboBox*)GetDlgItem(IDC_COMBO_AUDIO_OUTPUT_DEVICE);
 
-	winAudioInterface = new WindowsAudioInterface();
+	win_audio_interface = new WindowsAudioInterface();
 
 	std::vector<std::wstring> input_devices;
-	winAudioInterface->getInputDevices(input_devices);
+	win_audio_interface->getInputDevices(input_devices);
 
 	for (uint32_t i = 0; i < input_devices.size(); i++) {
 		comboBoxAudioInputs->AddString(CString(input_devices[i].c_str()));
 	}
 
 	std::vector<std::wstring> output_devices;
-	winAudioInterface->getOutputDevices(output_devices);
+	win_audio_interface->getOutputDevices(output_devices);
 
 	for (uint32_t i = 0; i < output_devices.size(); i++) {
 		comboBoxAudioOutputs->AddString(CString(output_devices[i].c_str()));
 	}
 
+	//BOOL value = TRUE;
+	//::DwmSetWindowAttribute(AfxGetMainWnd()->GetSafeHwnd(), DWMWA_USE_IMMERSIVE_DARK_MODE, &value, sizeof(value)); 
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
+}
+
+void CWinSmoovDlg::OnClose() {
+	TRACE("Closing WinSmoov\n");
+	win_audio_interface->stop();
+	delete win_audio_interface;
+
+	_CrtDumpMemoryLeaks();
+	CDialog::OnClose();
 }
 
 void CWinSmoovDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -185,16 +205,24 @@ void CWinSmoovDlg::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
 	OutputDebugString(CStringW("OK was clicked.\n"));
-	delete winAudioInterface;
+	delete win_audio_interface;
 	CDialogEx::OnOK();
 }
 
 void CWinSmoovDlg::OnCbnSelchangeComboAudioInputDevice()
 {
-	// TODO: Add your control notification handler code here
+	int sel_dev_idx = comboBoxAudioInputs->GetCurSel();
+	CString sel_dev_cstr = _T("");
+	comboBoxAudioInputs->GetLBText(sel_dev_idx, sel_dev_cstr);
+	std::wstring sel_dev(sel_dev_cstr);
+	win_audio_interface->setInputDevice(sel_dev);
 }
 
 void CWinSmoovDlg::OnCbnSelchangeComboAudioOutputDevice()
 {
-	// TODO: Add your control notification handler code here
+	int sel_dev_idx = comboBoxAudioOutputs->GetCurSel();
+	CString sel_dev_cstr = _T("");
+	comboBoxAudioOutputs->GetLBText(sel_dev_idx, sel_dev_cstr);
+	std::wstring sel_dev(sel_dev_cstr);
+	win_audio_interface->setOutputDevice(sel_dev);
 }

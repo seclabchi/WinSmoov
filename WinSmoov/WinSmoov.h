@@ -10,6 +10,8 @@
 
 #include "resource.h"		// main symbols
 
+#define _CRTDBG_MAP_ALLOC
+
 
 // CWinSmoovApp:
 // See WinSmoov.cpp for the implementation of this class
@@ -23,6 +25,10 @@ public:
 // Overrides
 public:
 	virtual BOOL InitInstance();
+
+private:
+	void EnableConsoleOutput();
+
 
 // Implementation
 

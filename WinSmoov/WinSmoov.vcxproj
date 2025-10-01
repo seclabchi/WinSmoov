@@ -76,6 +76,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -88,14 +89,20 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;_DEBUG;YAML_CPP_STATIC_DEFINE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>C:\Users\pzare\source\repos\fmsmoov-core\core_utils;C:\Users\pzare\source\repos\fmsmoov-core;C:\Users\pzare\source\repos\yaml-cpp\build\Debug;C:\Users\pzare\source\repos\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp23</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>C:\Users\pzare\source\repos\yaml-cpp\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>yaml-cppd.lib;dwmapi.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -118,6 +125,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>yaml-cppd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\pzare\source\repos\yaml-cpp\src\build\Debug</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -144,6 +153,8 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>yaml-cppd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\pzare\source\repos\yaml-cpp\src\build\Debug</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -170,6 +181,8 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>yaml-cppd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\pzare\source\repos\yaml-cpp\src\build\Debug</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -183,6 +196,45 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\fmsmoov-core\CoreConfig.h" />
+    <ClInclude Include="..\..\fmsmoov-core\CoreConfigVals.h" />
+    <ClInclude Include="..\..\fmsmoov-core\CoreStack.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\core_common.h" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\allpass_filter_lr4.h" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\AudioBuf.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\biquad.h" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\butterworth.h" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\channel_map.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\CircularBuffer.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\comparator.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\compressor.h" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\crossover_5_band.h" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\delay_line.h" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\filter_3rdorder.h" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\filter_butter3rd.h" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\filter_el.h" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\filter_lr4.h" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\LogLinConverter.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\lookahead_limiter.h" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\LPFSinglePole.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\running_rms.h" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\simple_gain.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\core_utils\vca.h" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcessorCore.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcessorModule.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcMod2BandAGC.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcMod5bandCompressor.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcMod5bandCrossover.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcModBassClipper.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcModClipper.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcModDelay.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcModFinalLPF.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcModGain.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcModHFEnhance.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcModInputHPF.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcModLevelMeter.hpp" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcModLookaheadLimiter.h" />
+    <ClInclude Include="..\..\fmsmoov-core\ProcModStereoEnhance.hpp" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -192,6 +244,43 @@
     <ClInclude Include="WinSmoovDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\fmsmoov-core\CoreConfig.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\CoreStack.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\allpass_filter_lr4.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\AudioBuf.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\biquad.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\butterworth.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\channel_map.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\CircularBuffer.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\comparator.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\compressor.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\crossover_5_band.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\delay_line.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\filter_3rdorder.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\filter_butter3rd.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\filter_el.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\filter_lr4.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\LogLinConverter.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\lookahead_limiter.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\LPFSinglePole.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\running_rms.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\simple_gain.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\core_utils\vca.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcessorCore.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcessorModule.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcMod2BandAGC.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcMod5bandCompressor.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcMod5bandCrossover.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcModBassClipper.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcModClipper.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcModDelay.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcModFinalLPF.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcModGain.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcModHFEnhance.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcModInputHPF.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcModLevelMeter.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcModLookaheadLimiter.cpp" />
+    <ClCompile Include="..\..\fmsmoov-core\ProcModStereoEnhance.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -31,6 +31,7 @@ protected:
 
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
+	virtual void OnClose();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
@@ -40,5 +41,5 @@ public:
 	afx_msg void OnCbnSelchangeComboAudioInputDevice();
 	afx_msg void OnCbnSelchangeComboAudioOutputDevice();
 private:
-	WindowsAudioInterface* winAudioInterface;
+	WindowsAudioInterface* win_audio_interface;
 };
